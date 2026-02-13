@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EEM 228: Lojik Devre Tasarımı - Ders Portalı</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate-50 */
+            color: #0f172a; /* Slate-900 */
+        }
+        .week-card {
+            transition: all 0.3s ease;
+        }
+        .week-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-slate-200">
+        <div class="container mx-auto px-4 py-16 md:py-24 text-center max-w-4xl">
+            <span class="inline-block py-1 px-3 rounded-full bg-indigo-100 text-indigo-800 text-sm font-bold mb-4">EEM 228</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
+                Lojik Devre Tasarımı
+            </h1>
+            <p class="text-xl text-slate-600 mb-8 leading-relaxed">
+                Kombinasyonel ve ardışıl devre tasarımı, RTL modelleme, işlemci mimarisi ve kontrol birimi tasarımı üzerine kapsamlı ders portalı.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#weeks" class="px-8 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
+                    Derslere Başla
+                </a>
+                <a href="#syllabus" class="px-8 py-3 bg-white text-slate-700 border border-slate-300 font-bold rounded-lg hover:bg-slate-50 transition-colors">
+                    Ders Hakkında
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 space-y-20 max-w-6xl">
+
+        <!-- Course Info Grid -->
+        <section id="syllabus" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Objective -->
+            <div class="md:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2 bg-pink-100 rounded-lg text-pink-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800">Dersin Amacı</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed">
+                    Bu dersin amacı, öğrencilere kombinasyonel ve ardışıl lojik devrelerin gelişmiş tasarım tekniklerini öğretmek; Register Transfer Lojik (RTL) kullanarak dijital sistemleri modelleme becerisi kazandırmak ve temel bir bilgisayarın işlemci, kontrol birimi ve giriş-çıkış organizasyonunun nasıl tasarlandığını kavratmaktır.
+                </p>
+            </div>
+
+            <!-- Resources -->
+            <div class="bg-slate-800 text-slate-300 p-8 rounded-2xl shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2 bg-slate-700 rounded-lg text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">Kaynaklar</h2>
+                </div>
+                <ul class="space-y-4 text-sm">
+                    <li>
+                        <strong class="block text-white">Ana Kaynak:</strong>
+                        Logic and Computer Design Fundamentals (Bölümler: 3, 4, 5, 6, 7, 9, 10, 11)
+                        <span class="block text-slate-400 text-xs mt-1">M. Morris Mano & Charles R. Kime</span>
+                    </li>
+                    <li class="border-t border-slate-600 pt-4">
+                        <strong class="block text-white">Yardımcı Kaynak:</strong>
+                        Mantık Devreleri
+                        <span class="block text-slate-400 text-xs mt-1">Morris Mano, Seçkin Yayıncılık, 2011</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Weekly Modules -->
+        <section id="weeks">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">Haftalık Ders İçeriği</h2>
+                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">14 Hafta</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- BÖLÜM 1: MSI & PLD -->
+                <div class="md:col-span-2 lg:col-span-3 mt-4 mb-2">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 1: MSI Lojik ve Programlanabilir Devreler</h3>
+                </div>
+
+                <!-- WEEK 1 -->
+                <a href="hafta1.html" class="week-card group block bg-white border-l-4 border-indigo-600 rounded-r-xl shadow-sm p-6 relative overflow-hidden">
+                    <div class="absolute top-4 right-4 bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">BAŞLA</div>
+                    <span class="text-xs font-bold text-slate-400 block mb-2">1. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">MSI Lojik Devreler</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Kod Çözücüler (Decoders), Kodlayıcılar, Multiplexer ve Demultiplexer yapıları.</p>
+                </a>
+
+                <!-- WEEK 2 -->
+                <a href="hafta2.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">2. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Programlanabilir Lojik (PLD/FPGA)</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">ROM, PAL, PLA yapıları ve FPGA temel taşı olan Look-up Table (LUT) mantığı.</p>
+                </a>
+
+                <!-- BÖLÜM 2: RTL -->
+                <div class="md:col-span-2 lg:col-span-3 mt-8 mb-2 border-t border-slate-200 pt-8">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 2: Register Transfer Lojik (RTL)</h3>
+                </div>
+
+                <!-- WEEK 3 -->
+                <a href="hafta3.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">3. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">RTL Temelleri</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Saklayıcılar, Sayıcılar, RTL notasyonu ve Veri Yolları (Bus) ile transferler.</p>
+                </a>
+
+                <!-- WEEK 4 -->
+                <a href="hafta4.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">4. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Mikrooperasyonlar</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Aritmetik, Lojik ve Kaydırma mikrooperasyonları. MUX tabanlı veri yolu tasarımı.</p>
+                </a>
+
+                <!-- BÖLÜM 3: İŞLEMCİ TASARIMI -->
+                <div class="md:col-span-2 lg:col-span-3 mt-8 mb-2 border-t border-slate-200 pt-8">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 3: İşlemci Birimi Tasarımı</h3>
+                </div>
+
+                <!-- WEEK 5 -->
+                <a href="hafta5.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">5. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">ALU Tasarımı</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Aritmetik Lojik Birimi, Toplayıcılar, Karşılaştırıcılar ve Shifter devreleri.</p>
+                </a>
+
+                <!-- WEEK 6 -->
+                <a href="hafta6.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">6. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Datapath (Veri Yolu) Tasarımı</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">İşlemci komut setinin donanım karşılıkları ve Kayan Nokta aritmetiğine giriş.</p>
+                </a>
+
+                <!-- BÖLÜM 4: I/O ve HABERLEŞME -->
+                <div class="md:col-span-2 lg:col-span-3 mt-8 mb-2 border-t border-slate-200 pt-8">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 4: I/O ve Çevre Birimleri</h3>
+                </div>
+
+                <!-- WEEK 7 -->
+                <a href="hafta7.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">7. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Haberleşme Temelleri</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">I/O Arayüzleri, Senkron/Asenkron iletim, Handshaking protokolleri.</p>
+                </a>
+
+                <!-- WEEK 8 -->
+                <a href="hafta8.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">8. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Kesme (Interrupt) ve DMA</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Öncelikli Kesme mekanizmaları ve Doğrudan Bellek Erişimi (DMA).</p>
+                </a>
+
+                <!-- BÖLÜM 5: ARDIŞIL DEVRELER & ASM -->
+                <div class="md:col-span-2 lg:col-span-3 mt-8 mb-2 border-t border-slate-200 pt-8">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 5: Durum Makineleri</h3>
+                </div>
+
+                <!-- WEEK 9 -->
+                <a href="hafta9.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">9. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Ardışıl Devre Analizi</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Durum diyagramları, Mealy ve Moore modelleri.</p>
+                </a>
+
+                <!-- WEEK 10 -->
+                <a href="hafta10.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">10. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Algoritmik Durum Makineleri (ASM)</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">ASM Grafikleri oluşturma, ASM blok tasarımı ve zamanlama.</p>
+                </a>
+
+                <!-- BÖLÜM 6: KONTROL BİRİMİ -->
+                <div class="md:col-span-2 lg:col-span-3 mt-8 mb-2 border-t border-slate-200 pt-8">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 6: Kontrol Birimi Tasarımı</h3>
+                </div>
+
+                <!-- WEEK 11 -->
+                <a href="hafta11.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">11. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Hardwired Kontrol</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Donanımsal kontrol tasarımı, ASM grafiklerinden kontrol sinyali türetme.</p>
+                </a>
+
+                <!-- WEEK 12 -->
+                <a href="hafta12.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">12. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Mikroprogramlı Kontrol</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Kontrol belleği, mikrokomutlar ve Datapath entegrasyonu.</p>
+                </a>
+
+                <!-- BÖLÜM 7: MİMARİ -->
+                <div class="md:col-span-2 lg:col-span-3 mt-8 mb-2 border-t border-slate-200 pt-8">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Bölüm 7: Bilgisayar Mimarisine Giriş</h3>
+                </div>
+
+                <!-- WEEK 13 -->
+                <a href="hafta13.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">13. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Komut Seti Mimarisi (ISA)</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Adresleme modları, RISC ve CISC kavramlarına genel bakış.</p>
+                </a>
+
+                <!-- WEEK 14 -->
+                <a href="hafta14.html" class="week-card group block bg-white border border-slate-200 rounded-xl shadow-sm p-6 hover:border-indigo-300">
+                    <span class="text-xs font-bold text-slate-400 block mb-2">14. HAFTA</span>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Temel Bilgisayar Organizasyonu</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2">Komut çevrimi (Fetch-Decode-Execute) ve Tek çevrimli işlemci tasarımı.</p>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Outcomes Section -->
+        <section class="bg-indigo-900 rounded-2xl p-8 md:p-12 shadow-lg mt-12 text-white">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Öğrenim Çıktıları
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 min-w-[20px] h-5 rounded-full bg-indigo-500 flex items-center justify-center text-xs">✓</div>
+                    <p class="text-indigo-100">MSI bileşenlerini (kod çözücü, çoklayıcı) ve FPGA/PLD yapılarını kullanarak, verilen bir probleme uygun kombinasyonel lojik devreyi tasarlar.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 min-w-[20px] h-5 rounded-full bg-indigo-500 flex items-center justify-center text-xs">✓</div>
+                    <p class="text-indigo-100">Dijital sistemlerdeki veri akışını ve mikrooperasyonları, Register Transfer Dili (RTL) kurallarını kullanarak modeller.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 min-w-[20px] h-5 rounded-full bg-indigo-500 flex items-center justify-center text-xs">✓</div>
+                    <p class="text-indigo-100">Aritmetik Lojik Birimi (ALU) ve kaydırma birimlerini birleştirerek, işlemcinin veri yolu (datapath) mimarisini oluşturur.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 min-w-[20px] h-5 rounded-full bg-indigo-500 flex items-center justify-center text-xs">✓</div>
+                    <p class="text-indigo-100">Karmaşık ardışıl devre problemleri için Algoritmik Durum Makinesi (ASM) grafiklerini çizer ve buna uygun kontrol mantığını gerçekleştirir.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 min-w-[20px] h-5 rounded-full bg-indigo-500 flex items-center justify-center text-xs">✓</div>
+                    <p class="text-indigo-100">Farklı G/Ç (I/O) tekniklerini (Kesme, DMA) ve bilgisayar mimarisi yaklaşımlarını (RISC/CISC) karşılaştırarak sistem performansına etkilerini analiz eder.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 mt-20">
+        <div class="container mx-auto px-4 py-8 text-center text-slate-500">
+            <p>&copy; 2026 EEM 228 Lojik Devre Tasarımı</p>
+            <p class="text-xs mt-2">Bu portal ders materyallerine erişim amacıyla hazırlanmıştır.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
