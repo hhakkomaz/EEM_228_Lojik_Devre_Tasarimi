@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Hafta: MSI Lojik ve Programlanabilir Devreler - EEM 228</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax (Optional for formulas, though we use unicode mostly) -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        /* Sidebar Scroll */
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 3px; }
+
+        /* Logic Gate Simulation Styles */
+        .wire { transition: stroke 0.3s ease; }
+        .wire-on { stroke: #ef4444; stroke-width: 3; } /* Red for HIGH */
+        .wire-off { stroke: #3b82f6; stroke-width: 2; } /* Blue for LOW */
+        
+        .gate-body { fill: white; stroke: #334155; stroke-width: 2; }
+        .node { cursor: pointer; transition: r 0.2s; }
+        .node:hover { r: 6; }
+        
+        .led-on { fill: #ef4444; filter: drop-shadow(0 0 5px #ef4444); }
+        .led-off { fill: #334155; opacity: 0.3; }
+
+        /* Tab Animations */
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Quiz Styles */
+        .option-btn.correct { background-color: #dcfce7; border-color: #22c55e; color: #14532d; }
+        .option-btn.wrong { background-color: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation Overlay -->
+    <div id="sidebar-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity duration-300 opacity-0"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+            <h2 class="font-bold text-lg text-slate-800">Ders İçeriği</h2>
+            <button onclick="toggleMenu()" class="p-2 hover:bg-slate-200 rounded-full text-slate-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <nav class="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-2">
+            <a href="index.html" class="block p-3 rounded-lg bg-slate-800 text-white font-bold mb-4 hover:bg-slate-700 transition-colors flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+                Ana Sayfa
+            </a>
+            <a href="#encoders" class="block p-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded">Kodlayıcılar (Encoders)</a>
+            <a href="#decoders" class="block p-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded">Kod Çözücüler (Decoders)</a>
+            <a href="#mux" class="block p-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded">Çoklayıcılar (Multiplexers)</a>
+            <a href="#demux" class="block p-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded">Demultiplexers</a>
+            <a href="#quiz" class="block p-2 text-sm font-bold text-indigo-600 bg-indigo-50 rounded mt-4">Soru - Cevap (Quiz)</a>
+        </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleMenu()" class="p-2 -ml-2 hover:bg-slate-100 rounded-lg text-slate-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 hidden md:block">EEM 228: Lojik Devre Tasarımı</h1>
+                    <p class="text-sm text-slate-500">Hafta 1: MSI Bileşenleri</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+               <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-1 rounded">MSI Logic</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16 max-w-5xl">
+
+        <!-- Intro Section -->
+        <section class="text-center space-y-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">Kod Çözücüler, Kodlayıcılar ve MUX/DEMUX</h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                Dijital elektroniğin temel yapı taşları olan MSI (Orta Ölçekli Entegrasyon) bileşenlerini keşfedin. 
+                Bu devreler, modern işlemcilerin ve bellek sistemlerinin "tuğlalarıdır".
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div class="font-bold text-indigo-600 text-2xl">\(2^N \to N\)</div>
+                    <div class="text-sm font-semibold text-slate-500">Encoder</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div class="font-bold text-indigo-600 text-2xl">\(N \to 2^N\)</div>
+                    <div class="text-sm font-semibold text-slate-500">Decoder</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div class="font-bold text-indigo-600 text-2xl">\(2^N \to 1\)</div>
+                    <div class="text-sm font-semibold text-slate-500">Multiplexer</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div class="font-bold text-indigo-600 text-2xl">\(1 \to 2^N\)</div>
+                    <div class="text-sm font-semibold text-slate-500">Demultiplexer</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Encoders (Kodlayıcılar) -->
+        <section id="encoders" class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 p-6 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">1. Kodlayıcılar (Encoders)</h2>
+                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">Veri Sıkıştırma</span>
+            </div>
+            <div class="p-6 md:p-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-600 mb-2">Temel Prensip</h3>
+                        <p class="text-slate-600 mb-4">
+                            Kodlayıcı, \(2^N\) giriş hattını \(N\) bitlik bir koda dönüştürür. Amacı, kodlanmamış (unencoded) girişleri alıp sıkıştırılmış formata çevirmektir.
+                        </p>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                            <p class="text-sm text-yellow-800 font-bold">Önemli Kısıtlama:</p>
+                            <p class="text-sm text-yellow-700">Standart kodlayıcılarda aynı anda sadece BİR giriş aktif olabilir. Birden fazla giriş aktif olursa çıkış hatalı olur.</p>
+                        </div>
+                        <h4 class="font-bold text-slate-700 mb-2">Öncelikli Kodlayıcı (Priority Encoder)</h4>
+                        <p class="text-sm text-slate-600">
+                            Bu sorunu çözmek için kullanılır. Birden fazla giriş aktifse, en yüksek önceliğe sahip olanın kodunu üretir.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 rounded-xl p-6 text-center">
+                        <!-- SVG Diagram for 4-to-2 Encoder -->
+                        <svg viewBox="0 0 300 200" class="w-full h-auto">
+                            <!-- Inputs -->
+                            <text x="10" y="40" fill="white" font-size="12">D3 (1000)</text>
+                            <line x1="60" y1="35" x2="100" y2="35" stroke="#3b82f6" stroke-width="2"/>
+                            
+                            <text x="10" y="80" fill="white" font-size="12">D2 (0100)</text>
+                            <line x1="60" y1="75" x2="100" y2="75" stroke="#3b82f6" stroke-width="2"/>
+                            
+                            <text x="10" y="120" fill="white" font-size="12">D1 (0010)</text>
+                            <line x1="60" y1="115" x2="100" y2="115" stroke="#3b82f6" stroke-width="2"/>
+                            
+                            <text x="10" y="160" fill="white" font-size="12">D0 (0001)</text>
+                            <line x1="60" y1="155" x2="100" y2="155" stroke="#3b82f6" stroke-width="2"/>
+
+                            <!-- Box -->
+                            <rect x="100" y="10" width="100" height="180" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                            <text x="150" y="100" fill="white" font-size="14" text-anchor="middle" font-weight="bold">4x2 Encoder</text>
+
+                            <!-- Outputs -->
+                            <line x1="200" y1="65" x2="240" y2="65" stroke="#ef4444" stroke-width="2"/>
+                            <text x="250" y="70" fill="white" font-size="12">Y (MSB)</text>
+                            
+                            <line x1="200" y1="135" x2="240" y2="135" stroke="#ef4444" stroke-width="2"/>
+                            <text x="250" y="140" fill="white" font-size="12">Z (LSB)</text>
+                        </svg>
+                        <p class="text-xs text-slate-400 mt-2">4 Giriş -> 2 Çıkış</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Decoders (Kod Çözücüler) -->
+        <section id="decoders" class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 p-6 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">2. Kod Çözücüler (Decoders)</h2>
+                <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">Adresleme</span>
+            </div>
+            <div class="p-6 md:p-8 space-y-6">
+                <p class="text-slate-600">
+                    Kod çözücü, \(N\) giriş hattını \(2^N\) çıkış hattına dönüştürür. Her giriş kombinasyonu (adres) için <strong>sadece bir</strong> çıkış hattını aktif eder.
+                </p>
+                
+                <!-- Interactive 7-Segment Decoder Sim -->
+                <div class="bg-slate-100 p-6 rounded-xl border border-slate-300">
+                    <h3 class="text-lg font-bold text-slate-700 mb-4 text-center">İnteraktif Uygulama: BCD to 7-Segment Decoder</h3>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                        <!-- Input Controls -->
+                        <div class="space-y-4">
+                            <p class="text-sm font-bold text-slate-500 mb-2">BCD Girişi (A B C D)</p>
+                            <div class="flex gap-2">
+                                <button onclick="setBCD(0)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">0</button>
+                                <button onclick="setBCD(1)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">1</button>
+                                <button onclick="setBCD(2)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">2</button>
+                                <button onclick="setBCD(3)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">3</button>
+                                <button onclick="setBCD(4)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">4</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="setBCD(5)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">5</button>
+                                <button onclick="setBCD(6)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">6</button>
+                                <button onclick="setBCD(7)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">7</button>
+                                <button onclick="setBCD(8)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">8</button>
+                                <button onclick="setBCD(9)" class="px-3 py-1 bg-white border rounded shadow hover:bg-indigo-50">9</button>
+                            </div>
+                            <div class="text-center mt-2 font-mono text-indigo-600 font-bold" id="bcd-display">Giriş: 0000</div>
+                        </div>
+
+                        <!-- 7 Segment SVG -->
+                        <div class="relative w-32 h-48 bg-black rounded-lg p-4 shadow-inner">
+                            <svg viewBox="0 0 60 100" class="w-full h-full">
+                                <polygon id="seg-a" points="10,10 50,10 45,15 15,15" class="led-off"/>
+                                <polygon id="seg-b" points="50,10 50,50 45,45 45,15" class="led-off"/>
+                                <polygon id="seg-c" points="50,50 50,90 45,85 45,55" class="led-off"/>
+                                <polygon id="seg-d" points="50,90 10,90 15,85 45,85" class="led-off"/>
+                                <polygon id="seg-e" points="10,90 10,50 15,55 15,85" class="led-off"/>
+                                <polygon id="seg-f" points="10,50 10,10 15,15 15,45" class="led-off"/>
+                                <polygon id="seg-g" points="10,50 50,50 45,55 15,55 10,50 15,45 45,45" class="led-off"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-4 text-center">Bu devre, 4 bitlik ikili sayıyı alır ve insan gözünün okuyabileceği bir rakama dönüştürür.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Multiplexers (MUX) -->
+        <section id="mux" class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 p-6 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">3. Çoklayıcılar (Multiplexers - MUX)</h2>
+                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded">Veri Seçici</span>
+            </div>
+            <div class="p-6 md:p-8">
+                <p class="text-slate-600 mb-6">
+                    Multiplexer (MUX), "Dijital Anahtar" gibidir. Çok sayıda giriş hattından gelen veriyi seçer ve tek bir çıkış hattına yönlendirir.
+                    Seçim işlemi, <strong>Select (S)</strong> girişleri ile yapılır.
+                </p>
+
+                <!-- 4-to-1 MUX Interactive -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h4 class="font-bold text-slate-700 mb-2">4-to-1 MUX Simülasyonu</h4>
+                        <div class="bg-slate-800 p-6 rounded-xl relative">
+                            <svg viewBox="0 0 400 300" class="w-full h-auto">
+                                <!-- Inputs -->
+                                <text x="10" y="60" fill="#94a3b8" font-size="12">I0 (A)</text>
+                                <line id="line-i0" x1="50" y1="55" x2="150" y2="70" class="wire wire-off"/>
+                                
+                                <text x="10" y="110" fill="#94a3b8" font-size="12">I1 (B)</text>
+                                <line id="line-i1" x1="50" y1="105" x2="150" y2="110" class="wire wire-off"/>
+                                
+                                <text x="10" y="160" fill="#94a3b8" font-size="12">I2 (C)</text>
+                                <line id="line-i2" x1="50" y1="155" x2="150" y2="150" class="wire wire-off"/>
+                                
+                                <text x="10" y="210" fill="#94a3b8" font-size="12">I3 (D)</text>
+                                <line id="line-i3" x1="50" y1="205" x2="150" y2="190" class="wire wire-off"/>
+
+                                <!-- MUX Body (Trapezoid) -->
+                                <polygon points="150,40 250,80 250,180 150,220" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                                <text x="180" y="135" fill="white" font-weight="bold">MUX</text>
+
+                                <!-- Output -->
+                                <line id="line-out" x1="250" y1="130" x2="350" y2="130" class="wire wire-off"/>
+                                <circle id="led-out" cx="360" cy="130" r="10" class="led-off"/>
+                                <text x="350" y="155" fill="white" font-size="12">Y (Çıkış)</text>
+
+                                <!-- Select Lines -->
+                                <line x1="180" y1="250" x2="180" y2="210" stroke="#fbbf24" stroke-width="2"/>
+                                <text x="175" y="270" fill="#fbbf24" font-size="12">S1</text>
+                                <line x1="220" y1="250" x2="220" y2="200" stroke="#fbbf24" stroke-width="2"/>
+                                <text x="215" y="270" fill="#fbbf24" font-size="12">S0</text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-100 rounded-lg border border-slate-200">
+                            <h5 class="font-bold text-sm text-slate-700 mb-3">1. Giriş Verilerini Ayarla (I0 - I3)</h5>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="check-i0" onchange="updateMux()"> I0</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="check-i1" onchange="updateMux()"> I1</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="check-i2" onchange="updateMux()"> I2</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="check-i3" onchange="updateMux()"> I3</label>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <h5 class="font-bold text-sm text-yellow-800 mb-3">2. Kanalı Seç (Select S1, S0)</h5>
+                            <div class="flex gap-4 mb-2">
+                                <label class="flex items-center gap-2 cursor-pointer text-yellow-900"><input type="checkbox" id="check-s1" onchange="updateMux()"> S1</label>
+                                <label class="flex items-center gap-2 cursor-pointer text-yellow-900"><input type="checkbox" id="check-s0" onchange="updateMux()"> S0</label>
+                            </div>
+                            <div class="text-sm font-mono bg-white p-2 rounded border border-yellow-100">
+                                Seçilen Kanal: <span id="mux-selected" class="font-bold text-indigo-600">I0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                            <p class="text-sm text-indigo-800">
+                                <strong>Mantık:</strong> \(Y = \overline{S_1}\overline{S_0}I_0 + \overline{S_1}S_0I_1 + S_1\overline{S_0}I_2 + S_1S_0I_3\)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Demultiplexers (DEMUX) -->
+        <section id="demux" class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 p-6 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">4. Demultiplexers (DEMUX)</h2>
+                <span class="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-1 rounded">Veri Dağıtıcı</span>
+            </div>
+            <div class="p-6 md:p-8">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="flex-1">
+                        <p class="text-slate-600 mb-4">
+                            DEMUX, MUX işleminin tam tersini yapar. Tek bir girişten gelen veriyi, seçim hatlarına göre birden fazla çıkıştan sadece birine dağıtır.
+                        </p>
+                        <ul class="list-disc list-inside text-slate-600 text-sm space-y-2 mb-4">
+                            <li><strong>Giriş:</strong> 1 Veri Hattı</li>
+                            <li><strong>Çıkış:</strong> \(2^N\) Veri Hattı</li>
+                            <li><strong>Kullanım:</strong> Seri-Paralel dönüşüm, Veri dağıtımı.</li>
+                        </ul>
+                        <div class="bg-slate-100 p-4 rounded border border-slate-200 text-sm">
+                            <strong>İpucu:</strong> Bir DEMUX devresi, veri girişi (Data Input) her zaman "1" (HIGH) tutulduğunda bir <strong>Kod Çözücü (Decoder)</strong> gibi davranır.
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-slate-900 rounded-xl p-6 flex items-center justify-center">
+                        <svg viewBox="0 0 300 200" class="w-full h-auto">
+                            <!-- Input -->
+                            <text x="10" y="100" fill="white" font-size="12">Data (D)</text>
+                            <line x1="50" y1="100" x2="100" y2="100" stroke="#3b82f6" stroke-width="2"/>
+                            
+                            <!-- DEMUX Body (Inverse Trapezoid) -->
+                            <polygon points="100,60 180,20 180,180 100,140" fill="#1e293b" stroke="#ec4899" stroke-width="3"/>
+                            <text x="110" y="105" fill="white" font-weight="bold" font-size="14">DEMUX</text>
+
+                            <!-- Outputs -->
+                            <line x1="180" y1="40" x2="250" y2="40" stroke="#94a3b8" stroke-width="2"/>
+                            <text x="260" y="45" fill="white" font-size="12">Y0</text>
+                            
+                            <line x1="180" y1="80" x2="250" y2="80" stroke="#94a3b8" stroke-width="2"/>
+                            <text x="260" y="85" fill="white" font-size="12">Y1</text>
+                            
+                            <line x1="180" y1="120" x2="250" y2="120" stroke="#94a3b8" stroke-width="2"/>
+                            <text x="260" y="125" fill="white" font-size="12">Y2</text>
+                            
+                            <line x1="180" y1="160" x2="250" y2="160" stroke="#94a3b8" stroke-width="2"/>
+                            <text x="260" y="165" fill="white" font-size="12">Y3</text>
+
+                            <!-- Selects -->
+                            <line x1="120" y1="180" x2="120" y2="150" stroke="#fbbf24" stroke-width="2"/>
+                            <text x="115" y="195" fill="#fbbf24" font-size="12">S</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="bg-indigo-50 rounded-2xl shadow-inner p-6 md:p-8 mt-12 mb-12 border border-indigo-100">
+            <div class="flex items-center gap-3 mb-6 border-b border-indigo-200 pb-4">
+                <div class="p-2 bg-indigo-600 text-white rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-indigo-900">Kendini Dene</h2>
+                    <p class="text-sm text-indigo-700">MSI bileşenleri ve mantık devreleri bilginizi test edin.</p>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="max-w-2xl mx-auto">
+                <div class="flex justify-between text-sm font-medium text-indigo-500 mb-2">
+                    <span id="question-counter">Soru 1 / 5</span>
+                    <span id="score-counter">Puan: 0</span>
+                </div>
+                <div class="w-full bg-indigo-200 rounded-full h-2 mb-6">
+                    <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 20%"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-indigo-100 mb-6 shadow-sm">
+                    <h3 id="question-text" class="text-lg font-bold text-slate-800 mb-4"></h3>
+                    <div id="options-container" class="space-y-3"></div>
+                </div>
+
+                <div id="feedback-container" class="hidden p-4 rounded-lg mb-6 border">
+                    <h4 id="feedback-title" class="font-bold mb-1"></h4>
+                    <p id="feedback-text" class="text-sm"></p>
+                </div>
+
+                <div class="flex justify-end">
+                    <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-bold disabled:opacity-50 disabled:cursor-not-allowed" disabled>Sonraki Soru</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12 text-center">
+        <p class="mb-2">EEM 228 - Lojik Devre Tasarımı</p>
+        <p class="text-xs">Bu içerik ders materyallerine ek olarak hazırlanmıştır.</p>
+    </footer>
+
+    <!-- Logic Scripts -->
+    <script>
+        // --- Sidebar Logic ---
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => { overlay.classList.remove('opacity-0'); }, 10);
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+            }
+        }
+
+        // --- 7-Segment Decoder Logic ---
+        const segments = {
+            0: ['a','b','c','d','e','f'],
+            1: ['b','c'],
+            2: ['a','b','d','e','g'],
+            3: ['a','b','c','d','g'],
+            4: ['b','c','f','g'],
+            5: ['a','c','d','f','g'],
+            6: ['a','c','d','e','f','g'],
+            7: ['a','b','c'],
+            8: ['a','b','c','d','e','f','g'],
+            9: ['a','b','c','d','f','g']
+        };
+
+        function setBCD(num) {
+            // Update Text
+            const binary = num.toString(2).padStart(4, '0');
+            document.getElementById('bcd-display').innerText = `Giriş: ${binary} (${num})`;
+
+            // Reset all segments
+            ['a','b','c','d','e','f','g'].forEach(seg => {
+                document.getElementById('seg-'+seg).setAttribute('class', 'led-off');
+            });
+
+            // Turn on active segments
+            segments[num].forEach(seg => {
+                document.getElementById('seg-'+seg).setAttribute('class', 'led-on');
+            });
+        }
+
+        // --- MUX Simulation Logic ---
+        function updateMux() {
+            const i0 = document.getElementById('check-i0').checked;
+            const i1 = document.getElementById('check-i1').checked;
+            const i2 = document.getElementById('check-i2').checked;
+            const i3 = document.getElementById('check-i3').checked;
+            const s1 = document.getElementById('check-s1').checked;
+            const s0 = document.getElementById('check-s0').checked;
+
+            // Visual Update Wires (Inputs)
+            document.getElementById('line-i0').setAttribute('class', i0 ? 'wire wire-on' : 'wire wire-off');
+            document.getElementById('line-i1').setAttribute('class', i1 ? 'wire wire-on' : 'wire wire-off');
+            document.getElementById('line-i2').setAttribute('class', i2 ? 'wire wire-on' : 'wire wire-off');
+            document.getElementById('line-i3').setAttribute('class', i3 ? 'wire wire-on' : 'wire wire-off');
+
+            // Logic
+            let output = false;
+            let selectedText = "";
+
+            if (!s1 && !s0) { output = i0; selectedText = "I0 (00)"; }
+            else if (!s1 && s0) { output = i1; selectedText = "I1 (01)"; }
+            else if (s1 && !s0) { output = i2; selectedText = "I2 (10)"; }
+            else { output = i3; selectedText = "I3 (11)"; }
+
+            // Visual Update Output
+            document.getElementById('mux-selected').innerText = selectedText;
+            document.getElementById('line-out').setAttribute('class', output ? 'wire wire-on' : 'wire wire-off');
+            document.getElementById('led-out').setAttribute('class', output ? 'led-on' : 'led-off');
+        }
+
+        // --- Quiz Logic ---
+        const questions = [
+            {
+                q: "8 girişli bir Kodlayıcı (Encoder) devresinin kaç adet çıkış hattı vardır?",
+                options: ["2", "3", "4", "8"],
+                correct: 1, // Index 1 -> "3"
+                exp: "Formül: 2^N Giriş -> N Çıkış. 8 = 2^3 olduğundan çıkış sayısı 3'tür."
+            },
+            {
+                q: "Aşağıdakilerden hangisi Multiplexer (MUX) için kullanılan diğer bir isimdir?",
+                options: ["Veri Dağıtıcı", "Veri Seçici", "Kod Çözücü", "Sayacı"],
+                correct: 1,
+                exp: "MUX, birçok girişten birini seçip çıkışa verdiği için 'Veri Seçici' (Data Selector) olarak adlandırılır."
+            },
+            {
+                q: "Bir kod çözücünün (Decoder) 'Enable' girişi 0 (Pasif) ise çıkışlar ne olur?",
+                options: ["Girişe göre değişir", "Hepsi 1 olur", "Hepsi 0 olur", "Son durumunu korur"],
+                correct: 2,
+                exp: "Enable pasif olduğunda kod çözücü çalışmaz ve tüm çıkışlar lojik 0 (veya tasarıma göre pasif) olur."
+            },
+            {
+                q: "1-to-4 DEMUX devresinde S1=1 ve S0=0 seçilirse hangi çıkış aktif olur?",
+                options: ["Y0", "Y1", "Y2", "Y3"],
+                correct: 2,
+                exp: "S1 S0 = 1 0 (Binary 2). Bu durumda Y2 çıkışı seçilir."
+            },
+            {
+                q: "Hangi devre 'One-Hot' kodlama mantığına göre çalışır?",
+                options: ["Decoder", "Encoder", "Multiplexer", "Full Adder"],
+                correct: 0,
+                exp: "Decoder'ın her giriş kombinasyonu için sadece TEK bir çıkışı '1' olur (One-Hot)."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const q = questions[currentQ];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('question-counter').innerText = `Soru ${currentQ + 1} / ${questions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+            
+            const optsDiv = document.getElementById('options-container');
+            optsDiv.innerHTML = '';
+            document.getElementById('feedback-container').classList.add('hidden');
+            document.getElementById('next-btn').disabled = true;
+
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(i, btn);
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, btn) {
+            const q = questions[currentQ];
+            const feedback = document.getElementById('feedback-container');
+            
+            // Disable all buttons
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+            if (selected === q.correct) {
+                btn.classList.add('correct');
+                feedback.innerHTML = `<h4 class="font-bold text-green-700">Doğru!</h4><p class="text-sm text-green-800">${q.exp}</p>`;
+                feedback.className = "p-4 rounded-lg mb-6 border bg-green-50 border-green-200 block";
+                score += 20;
+            } else {
+                btn.classList.add('wrong');
+                feedback.innerHTML = `<h4 class="font-bold text-red-700">Yanlış</h4><p class="text-sm text-red-800">${q.exp}</p>`;
+                feedback.className = "p-4 rounded-lg mb-6 border bg-red-50 border-red-200 block";
+            }
+            
+            document.getElementById('score-counter').innerText = `Puan: ${score}`;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < questions.length) {
+                loadQuestion();
+            } else {
+                // End of quiz
+                document.getElementById('quiz-container').innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-5xl mb-4">🏆</div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Test Tamamlandı!</h3>
+                        <p class="text-lg text-slate-600">Toplam Puanınız: <span class="font-bold text-indigo-600">${score}</span> / 100</p>
+                        <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 font-bold">Tekrar Dene</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize
+        setBCD(0); // Init 7-segment
+        updateMux(); // Init MUX
+        loadQuestion(); // Init Quiz
+
+    </script>
+</body>
+</html>
